@@ -1,12 +1,13 @@
 local start_screen = require('healthier.ui.start_screen')
+local config = require('healthier.config')
 local M = {}
 
-M.setup = function()
-  print('Hello world!')
-end
+M.setup = function(opts)
+  opts = opts or config
 
-M.show_start_screen = function()
-  start_screen.show_start_screen()
+  if opts.show_start_screen then
+    start_screen.show_start_screen()
+  end
 end
 
 return M
