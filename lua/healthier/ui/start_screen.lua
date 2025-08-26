@@ -1,58 +1,72 @@
 local start_screen_popup = nil
+
 local Popup = require('nui.popup')
 local event = require('nui.utils.autocmd').event
+
+local helpers = require('healthier.ui.helpers')
 
 local M = {}
 
 function M.show_start_screen()
-  start_screen_popup = Popup({
-    enter = true,
-    focusable = true,
-    border = {
-      style = 'rounded',
-      text = { top = ' healthier.nvim 🔥 ', top_align = 'center' },
-    },
-    position = '50%',
-    size = {
-      width = 50,
-      height = 10,
-    },
-    win_options = {
-      winhighlight = 'Normal:Normal,FloatBorder:Normal',
-    },
-  })
+  -- NOTE: vim.schedule runs after all other setup events
+  vim.schedule(function()
+    local popup_width = 50
 
-  start_screen_popup:mount()
+    start_screen_popup = Popup({
+      enter = true,
+      focusable = true,
+      border = {
+        style = 'rounded',
+        text = { top = ' healthier.nvim 🔥 ', top_align = 'center' },
+      },
+      position = '50%',
+      size = {
+        width = popup_width,
+        height = 10,
+      },
+      win_options = {
+        winhighlight = 'Normal:Normal,FloatBorder:Normal',
+      },
+    })
 
-  -- Insert content
-  vim.api.nvim_buf_set_lines(start_screen_popup.bufnr, 0, -1, false, {
-    '20 minutes of strong coding ahead!',
-    'Stay hydrated, stretch often.',
-    '',
-    '[<CR>] Start Session   [h] Stats   [q] Close',
-  })
+    start_screen_popup:mount()
 
-  -- Close when buffer is hidden or on exit
-  start_screen_popup:on(event.BufLeave, function()
-    start_screen_popup:unmount()
+    local lines = {
+      '20 minutes of strong coding ahead!',
+      'Stay hydrated, stretch often.',
+      '',
+      '[Enter] Start Session   [h] Stats   [q] Close',
+    }
+
+    for i, line in ipairs(lines) do
+      lines[i] = helpers.center_line(line, popup_width)
+    end
+
+    vim.api.nvim_buf_set_lines(start_screen_popup.bufnr, 0, -1, false, lines)
+
+    -- NOTE: Always put cursor on the starting popup window
+    vim.api.nvim_set_current_win(start_screen_popup.winid)
+
+    start_screen_popup:on(event.BufLeave, function()
+      start_screen_popup:unmount()
+    end)
+
+    local map_opts = { noremap = true, silent = true, buffer = start_screen_popup.bufnr }
+
+    vim.keymap.set('n', '<CR>', function()
+      start_screen_popup:unmount()
+      vim.notify('Start session')
+    end, map_opts)
+
+    vim.keymap.set('n', 'h', function()
+      start_screen_popup:unmount()
+      vim.notify('Stats feature coming soon! 📊')
+    end, map_opts)
+
+    vim.keymap.set('n', 'q', function()
+      start_screen_popup:unmount()
+    end, map_opts)
   end)
-
-  -- Keymaps for interactions
-  local map_opts = { noremap = true, silent = true, buffer = start_screen_popup.bufnr }
-
-  vim.keymap.set('n', '<CR>', function()
-    start_screen_popup:unmount()
-    vim.notify('Start session')
-  end, map_opts)
-
-  vim.keymap.set('n', 'h', function()
-    start_screen_popup:unmount()
-    vim.notify('Stats feature coming soon! 📊')
-  end, map_opts)
-
-  vim.keymap.set('n', 'q', function()
-    start_screen_popup:unmount()
-  end, map_opts)
 end
 
 return M
