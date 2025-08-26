@@ -25,3 +25,4 @@ jobs:
         uses: nvim-neorocks/nvim-busted-action@v1
         with:
           nvim_version: ${{ matrix.neovim_version }}
+          rockspec: healthier.nvim-dev-1.rockspec
