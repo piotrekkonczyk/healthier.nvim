@@ -1,7 +1,9 @@
 local M = {}
 
 M.setup = function()
-  print('Hello world!')
+  for _ in 10 do
+    print('Hello world!')
+  end
 end
 
 return M
