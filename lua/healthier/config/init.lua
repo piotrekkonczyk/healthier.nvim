@@ -1,8 +1,4 @@
----@class StartScreenConfig
----@field show_by_default boolean
-local start_screen_config = {
-  show_by_default = true,
-}
+local start_screen_config = require('healthier.config.start_screen_config')
 
 ---@class Config
 ---@field start_screen_config StartScreenConfig

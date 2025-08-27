@@ -7,11 +7,10 @@ local helpers = require('healthier.ui.helpers')
 
 local M = {}
 
-function M.show_start_screen()
+---@param start_screen_config StartScreenConfig
+function M.show_start_screen(start_screen_config)
   -- NOTE: vim.schedule runs after all other setup events
   vim.schedule(function()
-    local popup_width = 50
-
     start_screen_popup = Popup({
       enter = true,
       focusable = true,
@@ -21,8 +20,8 @@ function M.show_start_screen()
       },
       position = '50%',
       size = {
-        width = popup_width,
-        height = 10,
+        width = start_screen_config.popup_width,
+        height = start_screen_config.popup_height,
       },
       win_options = {
         winhighlight = 'Normal:Normal,FloatBorder:Normal',
@@ -39,7 +38,7 @@ function M.show_start_screen()
     }
 
     for i, line in ipairs(lines) do
-      lines[i] = helpers.center_line(line, popup_width)
+      lines[i] = helpers.center_line(line, start_screen_config.popup_width)
     end
 
     vim.api.nvim_buf_set_lines(start_screen_popup.bufnr, 0, -1, false, lines)
