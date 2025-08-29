@@ -31,11 +31,23 @@ function M.show_start_screen(start_screen_config)
     start_screen_popup:mount()
 
     local lines = {
+      '',
       '20 minutes of strong coding ahead!',
       'Stay hydrated, stretch often.',
       '',
-      '[Enter] Start Session   [h] Stats   [q] Close',
     }
+
+    local displayed_text = '[Enter] Start Session'
+
+    if start_screen_config.show_stats then
+      displayed_text = displayed_text .. '   [[h] Stats'
+    end
+
+    if start_screen_config.show_quit then
+      displayed_text = displayed_text .. '   [q] Close'
+    end
+
+    table.insert(lines, displayed_text)
 
     for i, line in ipairs(lines) do
       lines[i] = helpers.center_line(line, start_screen_config.popup_width)
@@ -57,14 +69,18 @@ function M.show_start_screen(start_screen_config)
       vim.notify('Start session')
     end, map_opts)
 
-    vim.keymap.set('n', 'h', function()
-      start_screen_popup:unmount()
-      vim.notify('Stats feature coming soon! 📊')
-    end, map_opts)
+    if start_screen_config.show_stats then
+      vim.keymap.set('n', 'h', function()
+        start_screen_popup:unmount()
+        vim.notify('Stats feature coming soon! 📊')
+      end, map_opts)
+    end
 
-    vim.keymap.set('n', 'q', function()
-      start_screen_popup:unmount()
-    end, map_opts)
+    if start_screen_config.show_quit then
+      vim.keymap.set('n', 'q', function()
+        start_screen_popup:unmount()
+      end, map_opts)
+    end
   end)
 end
 
