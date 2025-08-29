@@ -16,7 +16,7 @@ function M.show_start_screen(start_screen_config)
       focusable = true,
       border = {
         style = 'rounded',
-        text = { top = ' healthier.nvim 🔥 ', top_align = 'center' },
+        text = { top = ' healthier.nvim </> ', top_align = 'center' },
       },
       position = '50%',
       size = {
@@ -40,7 +40,7 @@ function M.show_start_screen(start_screen_config)
     local displayed_text = '[Enter] Start Session'
 
     if start_screen_config.show_stats then
-      displayed_text = displayed_text .. '   [[h] Stats'
+      displayed_text = displayed_text .. '   [h] Stats'
     end
 
     if start_screen_config.show_quit then
@@ -66,7 +66,7 @@ function M.show_start_screen(start_screen_config)
 
     vim.keymap.set('n', '<CR>', function()
       start_screen_popup:unmount()
-      vim.notify('Start session')
+      vim.notify('Session has started </>')
     end, map_opts)
 
     if start_screen_config.show_stats then
