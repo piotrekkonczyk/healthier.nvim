@@ -40,7 +40,7 @@ function M.show_start_screen(config)
     local displayed_text = '[Enter] Start Session'
 
     if config.start_screen_config.show_stats then
-      displayed_text = displayed_text .. '   [h] Stats'
+      displayed_text = displayed_text .. '   [s] Stats'
     end
 
     if config.start_screen_config.show_quit then
@@ -70,7 +70,7 @@ function M.show_start_screen(config)
     end, map_opts)
 
     if config.start_screen_config.show_stats then
-      vim.keymap.set('n', 'h', function()
+      vim.keymap.set('n', 's', function()
         start_screen_popup:unmount()
         vim.notify('Stats feature coming soon! 📊')
       end, map_opts)

@@ -12,10 +12,12 @@
 ---@field stretch_config StretchConfig | nil Configuration for stretching during session
 local session_config = {
   duration_in_mins = 20,
+
   break_config = {
     duration_in_mins = 5,
     message = "Great work out there! Let's take a short break now",
   },
+
   stretch_config = {
     interval_in_mins = 5,
     message = 'Take a quick stretch! 💪',
