@@ -7,8 +7,8 @@ local helpers = require('healthier.ui.helpers')
 
 local M = {}
 
----@param start_screen_config StartScreenConfig
-function M.show_start_screen(start_screen_config)
+---@param config Config
+function M.show_start_screen(config)
   -- NOTE: vim.schedule runs after all other setup events
   vim.schedule(function()
     start_screen_popup = Popup({
@@ -16,12 +16,12 @@ function M.show_start_screen(start_screen_config)
       focusable = true,
       border = {
         style = 'rounded',
-        text = { top = ' healthier.nvim </> ', top_align = 'center' },
+        text = { top = ' healthier.nvim ', top_align = 'center' },
       },
       position = '50%',
       size = {
-        width = start_screen_config.popup_width,
-        height = start_screen_config.popup_height,
+        width = config.start_screen_config.popup_width,
+        height = config.start_screen_config.popup_height,
       },
       win_options = {
         winhighlight = 'Normal:Normal,FloatBorder:Normal',
@@ -32,25 +32,25 @@ function M.show_start_screen(start_screen_config)
 
     local lines = {
       '',
-      '20 minutes of strong coding ahead!',
+      config.session_config.duration_in_mins .. ' minutes of strong coding ahead!',
       'Stay hydrated, stretch often.',
       '',
     }
 
     local displayed_text = '[Enter] Start Session'
 
-    if start_screen_config.show_stats then
-      displayed_text = displayed_text .. '   [h] Stats'
+    if config.start_screen_config.show_stats then
+      displayed_text = displayed_text .. '   [s] Stats'
     end
 
-    if start_screen_config.show_quit then
+    if config.start_screen_config.show_quit then
       displayed_text = displayed_text .. '   [q] Close'
     end
 
     table.insert(lines, displayed_text)
 
     for i, line in ipairs(lines) do
-      lines[i] = helpers.center_line(line, start_screen_config.popup_width)
+      lines[i] = helpers.center_line(line, config.start_screen_config.popup_width)
     end
 
     vim.api.nvim_buf_set_lines(start_screen_popup.bufnr, 0, -1, false, lines)
@@ -66,17 +66,17 @@ function M.show_start_screen(start_screen_config)
 
     vim.keymap.set('n', '<CR>', function()
       start_screen_popup:unmount()
-      vim.notify('Session has started </>')
+      vim.notify(config.session_config.duration_in_mins .. ' minute session has started')
     end, map_opts)
 
-    if start_screen_config.show_stats then
-      vim.keymap.set('n', 'h', function()
+    if config.start_screen_config.show_stats then
+      vim.keymap.set('n', 's', function()
         start_screen_popup:unmount()
         vim.notify('Stats feature coming soon! 📊')
       end, map_opts)
     end
 
-    if start_screen_config.show_quit then
+    if config.start_screen_config.show_quit then
       vim.keymap.set('n', 'q', function()
         start_screen_popup:unmount()
       end, map_opts)
